@@ -1,0 +1,55 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Telegram — скачать видео по ссылке: бот, сайт, свой бот hursaalo</title><meta name="description" content="Как скачать видео по ссылке через Telegram: готовые боты, сайты, yt-dlp и свой бот на Python."><meta name="robots" content="noindex"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head><body><header class="top"><a href="./" class="brand">hursaalo</a></header><main><section class="hero"><div class="sq">🟦🟣</div><h1>Telegram — скачать видео по ссылке: бот, сайт, свой бот</h1><p class="lead">Четыре способа получить видео из YouTube, TikTok, Instagram: от готовых ботов до собственного бота за вечер.</p></section><article class="guide">
+<h2>Способ 1. Готовый бот в Telegram</h2>
+<ol>
+<li>В поиске Telegram набери «скачать видео» или «video downloader» и открой бота с большим числом пользователей.</li>
+<li>Нажми Start, отправь ссылку на видео, получи файл.</li>
+<li>Боты периодически блокируют и переименовывают, поэтому держи 2–3 запасных. Не вводи в боте пароли и не соглашайся на «подписку за SMS».</li>
+</ol>
+<h2>Способ 2. Сайт-загрузчик</h2>
+<ul>
+<li>Бесплатные сайты-загрузчики (например, cobalt.tools): вставляешь ссылку, получаешь файл. Работают из браузера на ПК и телефоне.</li>
+<li>Закрывай рекламу и всплывающие окна, ничего не устанавливай и не разрешай уведомления.</li>
+</ul>
+<h2>Способ 3. yt-dlp на компьютере</h2>
+<p>Самый стабильный вариант, если видео много или нужно лучшее качество.</p>
+<ol>
+<li>Скачай yt-dlp с официальной страницы <b>github.com/yt-dlp/yt-dlp</b> (раздел Releases). Для склейки видео и звука нужен ещё ffmpeg.</li>
+<li>В командной строке: <code>yt-dlp "ссылка"</code></li>
+<li>Только звук: <code>yt-dlp -x --audio-format mp3 "ссылка"</code></li>
+<li>Ограничить качество: <code>yt-dlp -f "bv*[height&lt;=720]+ba/b[height&lt;=720]" "ссылка"</code></li>
+</ol>
+<h2>Способ 4. Свой бот: ссылка → видео (Python)</h2>
+<ol>
+<li>В Telegram открой <b>@BotFather</b>, команда <code>/newbot</code>, придумай имя. Получишь токен: это пароль бота, никому его не показывай.</li>
+<li>Поставь Python и библиотеки: <code>pip install pyTelegramBotAPI yt-dlp</code></li>
+<li>Сохрани код как <code>bot.py</code>, вставь токен и запусти <code>python bot.py</code>:</li>
+</ol>
+<pre><code>import os, telebot, yt_dlp
+bot = telebot.TeleBot("ТВОЙ_ТОКЕН")
+
+@bot.message_handler(func=lambda m: m.text and m.text.startswith("http"))
+def dl(m):
+    bot.reply_to(m, "Скачиваю...")
+    opts = {"outtmpl": "v_%(id)s.%(ext)s", "noplaylist": True,
+            "format": "best[ext=mp4][filesize&lt;49M]/best[ext=mp4][height&lt;=480]/best"}
+    try:
+        with yt_dlp.YoutubeDL(opts) as y:
+            info = y.extract_info(m.text, download=True)
+            path = y.prepare_filename(info)
+        with open(path, "rb") as f:
+            bot.send_video(m.chat.id, f)
+        os.remove(path)
+    except Exception as e:
+        bot.reply_to(m, "Не получилось: " + str(e)[:200])
+
+bot.infinity_polling()</code></pre>
+<ul>
+<li>Бот отвечает, пока запущен твой компьютер. Для работы круглосуточно нужен сервер (VPS) или ПК, который не выключается.</li>
+<li>Обычный бот отправляет файлы <b>до 50 МБ</b>. Для длинных видео ставь качество пониже.</li>
+</ul>
+<h2>Важно</h2>
+<ul>
+<li>Скачивай только то, что можно: свои видео и контент с разрешением автора. Чужие ролики нельзя перезаливать как свои.</li>
+<li>Если сервис изменил защиту и бот перестал работать, обнови yt-dlp: <code>pip install -U yt-dlp</code>.</li>
+</ul>
+</article><section class="thanks"><h2>✦ Спасибо за покупку!</h2><p>Если всё получилось — подтвердите заказ на FunPay и оставьте короткий отзыв. Это очень помогает.</p><p>Что-то не открылось или непонятно — напишите в чат заказа, помогу.</p></section></main><footer>Материал носит справочный характер. Названия игр и сервисов принадлежат их правообладателям.</footer><script>document.addEventListener('click',e=>{const b=e.target.closest('.copy');if(!b)return;navigator.clipboard.writeText(b.dataset.c).then(()=>{const t=b.textContent;b.textContent='Скопировано ✓';setTimeout(()=>b.textContent=t,1400)})});</script></body></html>

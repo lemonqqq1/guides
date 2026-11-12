@@ -1,0 +1,42 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Telegram-бот без программиста: сделать своего с помощью ИИ hursaalo</title><meta name="description" content="Как сделать Telegram-бота самому с помощью ИИ: BotFather, код, запуск и хостинг. Сколько стоит заказ."><meta name="robots" content="noindex"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head><body><header class="top"><a href="./" class="brand">hursaalo</a></header><main><section class="hero"><div class="sq">🟦🟣</div><h1>Telegram-бот без программиста: сделать своего с помощью ИИ</h1><p class="lead">Сколько стоит бот, что можно сделать самому за вечер и когда проще заказать.</p></section><article class="guide">
+<h2>Что нужно</h2>
+<ul>
+<li>Аккаунт Telegram и компьютер с Python (python.org, галочка «Add to PATH» при установке).</li>
+<li>Любой ИИ-помощник для кода: ChatGPT, Claude, Gemini.</li>
+<li>Час-два времени для простого бота: ответы на кнопки, анкета, приём заявок, выдача файла, напоминания.</li>
+</ul>
+<h2>Шаг 1. Создать бота</h2>
+<ol>
+<li>Открой <b>@BotFather</b> и отправь <code>/newbot</code>.</li>
+<li>Задай имя и username (должен заканчиваться на <code>bot</code>).</li>
+<li>Скопируй токен. Это ключ к боту: никому не отправляй и не публикуй.</li>
+</ol>
+<h2>Шаг 2. Написать код через ИИ</h2>
+<p>Скопируй в ИИ такой запрос, подставив свою задачу:</p>
+<p><i>«Напиши Telegram-бота на Python с библиотекой aiogram 3. Задача: [опиши, что должен делать бот, какие кнопки, какие ответы]. Токен читай из переменной окружения BOT_TOKEN. Дай полный код одним файлом и инструкцию запуска для Windows по шагам.»</i></p>
+<ul>
+<li>Чем конкретнее описание, тем лучше результат. Укажи тексты кнопок и что происходит после каждой.</li>
+<li>Если вышла ошибка, скопируй весь её текст обратно в ИИ и попроси исправить.</li>
+</ul>
+<h2>Шаг 3. Запустить</h2>
+<ol>
+<li>Создай папку, положи туда <code>bot.py</code>.</li>
+<li>В командной строке: <code>pip install aiogram</code></li>
+<li>Задай токен: <code>set BOT_TOKEN=твой_токен</code>, затем <code>python bot.py</code>.</li>
+<li>Открой бота в Telegram и нажми Start.</li>
+</ol>
+<h2>Где держать, чтобы работал всегда</h2>
+<ul>
+<li><b>Свой ПК:</b> бесплатно, но бот спит, когда компьютер выключен.</li>
+<li><b>VPS:</b> обычно от нескольких сотен рублей в месяц. Подходит для бота, который отвечает круглосуточно.</li>
+<li><b>Бесплатные хостинги</b> для небольших ботов бывают, но условия и лимиты меняются: смотри актуальные на их страницах.</li>
+</ul>
+<h2>Сколько стоит заказ</h2>
+<ul>
+<li>Простой бот (меню, ответы, заявки): ориентир 150–500 ₽ за разработку.</li>
+<li>Бот с базой данных, оплатой, админ-панелью: дороже, цена зависит от объёма задач.</li>
+<li>Хостинг оплачивается отдельно.</li>
+</ul>
+<h2>Чек-лист</h2>
+<p>☐ Расписал, что бот делает по шагам<br>☐ Токен хранится в переменной, не в чате и не на GitHub<br>☐ Проверил каждую кнопку<br>☐ Решил, где бот будет работать постоянно</p>
+</article><section class="thanks"><h2>✦ Спасибо за покупку!</h2><p>Если всё получилось — подтвердите заказ на FunPay и оставьте короткий отзыв. Это очень помогает.</p><p>Что-то не открылось или непонятно — напишите в чат заказа, помогу.</p></section></main><footer>Материал носит справочный характер. Названия игр и сервисов принадлежат их правообладателям.</footer><script>document.addEventListener('click',e=>{const b=e.target.closest('.copy');if(!b)return;navigator.clipboard.writeText(b.dataset.c).then(()=>{const t=b.textContent;b.textContent='Скопировано ✓';setTimeout(()=>b.textContent=t,1400)})});</script></body></html>
