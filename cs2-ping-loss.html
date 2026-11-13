@@ -1,0 +1,30 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CS2 — высокий пинг и потери пакетов: как исправить hursaalo</title><meta name="description" content="Высокий пинг и packet loss в CS2: проверка сети, выбор дата-центра, кабель вместо Wi-Fi, фоновые загрузки, DNS и сброс сети."><meta name="robots" content="noindex"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head><body><header class="top"><a href="./" class="brand">hursaalo</a></header><main><section class="hero"><div class="sq">🎮📶</div><h1>CS2 — высокий пинг и потери пакетов: как исправить</h1><p class="lead">В CS2 прыгает пинг, есть loss и лаги при хорошем интернете? Проверка и шаги по порядку.</p></section><article class="guide">
+<h2>1. Определите, что именно не так</h2>
+<ul>
+<li>Высокий <b>пинг</b> — сервер далеко или канал перегружен.</li>
+<li><b>Потери (loss)</b> — проблемы Wi-Fi, кабеля или провайдера.</li>
+<li><b>Скачки (jitter)</b> — обычно Wi-Fi или фоновые загрузки.</li>
+</ul>
+<p>Покажите статистику в игре: консоль <code>cl_showfps 1</code>; также в настройках игры можно включить телеметрию (пинг и потери).</p>
+<h2>2. Быстрые исправления</h2>
+<ol>
+<li>Подключитесь <b>кабелем</b>. Wi-Fi — самая частая причина потерь; если только Wi-Fi, используйте 5 ГГц и сядьте ближе к роутеру.</li>
+<li>Закройте загрузки и обновления: Steam, Windows Update, облака, торренты, видео.</li>
+<li>Перезагрузите роутер (выключить на 30 секунд).</li>
+<li>Отключите VPN/прокси, если он не нужен.</li>
+</ol>
+<h2>3. Регион поиска матчей</h2>
+<p>В настройках игры ограничьте поиск ближайшими дата-центрами (максимальный пинг). Слишком широкий выбор даёт матчи с пингом 100+.</p>
+<h2>4. Windows и сеть</h2>
+<ol>
+<li>В командной строке от администратора: <code>ipconfig /flushdns</code>, затем <code>netsh winsock reset</code> и перезагрузка.</li>
+<li>Попробуйте DNS 1.1.1.1 / 8.8.8.8 (свойства сетевого адаптера → IPv4).</li>
+<li>Обновите драйвер сетевой карты с сайта производителя; в диспетчере устройств отключите разрешение на отключение адаптера для экономии энергии.</li>
+<li>Включите схему питания «Высокая производительность».</li>
+</ol>
+<h2>5. Не верьте «магическим конфигам»</h2>
+<p>Команды из случайных конфигов пинг не уменьшают. Не уверены в команде — оставьте значение по умолчанию.</p>
+<h2>6. Если потери остаются</h2>
+<p>Выполните <code>ping 8.8.8.8 -n 100</code>. Потери по всем адресам — проблема у провайдера: назовите им результат проверки. Потери только в игре — смените дата-центр и закройте фоновые программы.</p>
+
+</article><section class="thanks"><h2>✦ Спасибо за покупку!</h2><p>Если всё получилось — подтвердите заказ на FunPay и оставьте короткий отзыв. Это очень помогает.</p><p>Что-то не открылось или непонятно — напишите в чат заказа, помогу.</p></section></main><footer>Материал носит справочный характер. Названия игр и сервисов принадлежат их правообладателям.</footer><script>document.addEventListener('click',e=>{const b=e.target.closest('.copy');if(!b)return;navigator.clipboard.writeText(b.dataset.c).then(()=>{const t=b.textContent;b.textContent='Скопировано ✓';setTimeout(()=>b.textContent=t,1400)})});</script></body></html>
