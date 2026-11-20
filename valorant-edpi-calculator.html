@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Меняешь DPI мыши? Найди чувствительность, которая сохранит прежнее движение прицела.">
+<title>Калькулятор eDPI Valorant · hursaalo</title>
+<link rel="stylesheet" href="aim-tools.css">
+</head>
+<body>
+<main>
+<nav aria-label="Инструменты"><a href="index.html">Каталог</a><a href="pubg-mobile-sensitivity.html">PUBG Mobile</a><a href="standoff2-sensitivity.html">Standoff 2</a></nav>
+<header><h1>Калькулятор eDPI Valorant</h1><p>Меняешь DPI мыши? Найди чувствительность, которая сохранит прежнее движение прицела.</p></header>
+
+<div class="layout">
+<section class="box" aria-labelledby="setup">
+<h2 id="setup">Перенос при смене DPI</h2>
+<form id="converter" novalidate>
+<div class="fields">
+<label for="old-dpi">Прежний DPI<input id="old-dpi" type="text" inputmode="numeric" value="800" maxlength="6"></label>
+<label for="sens">Прежняя сенса в Valorant<input id="sens" type="text" inputmode="decimal" value="0,4" maxlength="12"></label>
+<label for="new-dpi">Новый DPI<input id="new-dpi" type="text" inputmode="numeric" value="1600" maxlength="6"></label>
+</div>
+<button type="submit" class="primary">Пересчитать</button>
+</form>
+<div class="output" id="result" role="status"></div>
+<div class="controls"><button type="button" id="copy" disabled>Скопировать результат</button></div>
+<p>Для мыши на ПК. Сравнивай eDPI внутри Valorant.</p>
+</section>
+<aside class="box">
+<h2>Проверка на полигоне</h2>
+<ol class="prose"><li>Введи в Valorant рассчитанную сенсу.</li><li>Сделай привычный разворот и несколько переводов между ботами.</li><li>Проверь, удобно ли целиться. Округление в игре может слегка изменить ощущение.</li></ol>
+<p><a href="https://wiki.playvalorant.com/en-us/Range">Полигон Valorant</a></p>
+</aside>
+</div>
+
+</main>
+<script>
+
+const form = document.getElementById('converter');
+const result = document.getElementById('result');
+const copy = document.getElementById('copy');
+let output = '';
+const format = (x, digits) => new Intl.NumberFormat('ru-RU',{maximumFractionDigits:digits}).format(x);
+function number(id, integer) {
+  const input = document.getElementById(id);
+  const raw = input.value.trim().replace(',', '.');
+  const regex = integer ? /^\d+$/ : /^\d+(?:\.\d+)?$/;
+  const value = Number(raw);
+  if (!regex.test(raw) || !Number.isFinite(value) || value <= 0) throw input;
+  return value;
+}
+function calculate(focus) {
+  try {
+    const old = number('old-dpi',true), sens = number('sens',false), next = number('new-dpi',true);
+    const edpi = old * sens;
+    const converted = format(edpi / next, 6);
+    output = 'Новая сенса: ' + converted + ' · eDPI: ' + format(edpi, 3);
+    result.textContent = output;
+    result.classList.remove('error');
+    copy.disabled = false;
+  } catch (input) {
+    output = '';
+    result.textContent = 'Проверь поля: DPI должен быть целым числом, чувствительность — больше нуля.';
+    result.classList.add('error');
+    copy.disabled = true;
+    if (focus) input.focus();
+  }
+}
+form.onsubmit = event => { event.preventDefault(); calculate(true); };
+form.oninput = () => calculate(false);
+copy.onclick = async () => {
+  try { await navigator.clipboard.writeText(output); result.textContent = output + ' · Скопировано'; }
+  catch { result.textContent = output + ' · Можно выделить текст вручную'; }
+};
+calculate(false);
+
+</script>
+</body>
+</html>

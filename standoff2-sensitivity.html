@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Подстрой прицел на новом телефоне или планшете с помощью повторяемых проб.">
+<title>Чувствительность Standoff 2 · hursaalo</title>
+<link rel="stylesheet" href="aim-tools.css">
+</head>
+<body>
+<main>
+<nav aria-label="Инструменты"><a href="index.html">Каталог</a><a href="pubg-mobile-sensitivity.html">PUBG Mobile</a><a href="valorant-edpi-calculator.html">Valorant</a></nav>
+<header><h1>Чувствительность Standoff 2</h1><p>Подстрой прицел на новом телефоне или планшете с помощью повторяемых проб.</p></header>
+
+<div class="layout">
+<section class="box" aria-labelledby="setup">
+<h2 id="setup">Обычный прицел и прицеливание</h2>
+<div class="fields">
+<label for="mode">Режим<select id="mode"><option value="look">Обычный прицел</option><option value="aim">Прицеливание</option></select></label>
+<label for="current">Текущее значение<input id="current" type="text" inputmode="decimal" maxlength="12" placeholder="Например, 2,50"></label>
+<label for="step">Шаг проверки<select id="step"><option value="8">8% от значения</option><option value="4">4% от значения</option><option value="2">2% от значения</option></select></label>
+</div>
+<div class="commands"><button type="button" data-direction="1">Не довожу</button><button type="button" data-direction="-1">Перелетаю</button><button type="button" class="primary" id="save">Мне подходит</button></div>
+<div class="output" id="result" role="status">Введи текущее значение и оцени три попытки.</div>
+<div class="controls"><button type="button" id="apply" disabled>Подставить для следующей пробы</button></div>
+</section>
+<aside class="box">
+<h2>Один тест за раз</h2>
+<ol class="prose"><li>На тренировке зафиксируй FPS, раскладку и сглаживание.</li><li>Для обычного прицела трижды переведи прицел одним привычным свайпом.</li><li>Для прицеливания повтори тест в конкретном режиме, который собираешься менять.</li></ol>
+<p><a href="https://help.standoff2.com/en/articles/11533125-beholder-gambit-update-0-34-0-description">О сглаживании в Standoff 2</a></p>
+</aside>
+<section class="box"><h2>Сохранено в браузере</h2><ul class="saved" id="saved"></ul><p id="empty">Здесь появятся удачные значения после проверки в игре.</p></section>
+</div>
+
+</main>
+<script>
+
+const mode = document.getElementById('mode');
+const current = document.getElementById('current');
+const result = document.getElementById('result');
+const apply = document.getElementById('apply');
+const storage = 'hursaalo-standoff-aim';
+let saved = {}, candidate = null, previous = null, step = null;
+try { saved = JSON.parse(localStorage.getItem(storage)) || {}; } catch {}
+const format = number => new Intl.NumberFormat('ru-RU',{maximumFractionDigits:3}).format(number);
+function value() {
+  const input = current.value.trim().replace(',', '.');
+  const number = Number(input);
+  return /^\d+(?:\.\d+)?$/.test(input) && number > 0 && number <= 999 ? number : null;
+}
+function show(text) {
+  result.textContent = text;
+  apply.disabled = candidate === null;
+}
+function reset() { candidate = previous = step = null; }
+function renderSaved() {
+  const rows = [...mode.options].filter(x => Number.isFinite(saved[x.value])).map(x => {
+    const row = document.createElement('li');
+    row.textContent = x.text + ' · ' + format(saved[x.value]);
+    return row;
+  });
+  document.getElementById('saved').replaceChildren(...rows);
+  document.getElementById('empty').hidden = rows.length > 0;
+}
+mode.onchange = () => {
+  reset();
+  current.value = saved[mode.value] ?? '';
+  show('Введи значение из выбранного режима.');
+};
+for (const item of [current,document.getElementById('step')]) {
+  item.addEventListener('input',() => { reset(); show('Повтори три одинаковых попытки.'); });
+}
+for (const button of document.querySelectorAll('[data-direction]')) {
+  button.onclick = () => {
+    const start = value();
+    if (start === null) { show('Введи число больше нуля. Можно использовать запятую.'); current.focus(); return; }
+    const direction = Number(button.dataset.direction);
+    step ??= Number(document.getElementById('step').value);
+    if (previous !== null && previous !== direction) step = Math.max(1,step / 2);
+    previous = direction;
+    candidate = start * (1 + direction * step / 100);
+    show('Следующая проба: ' + format(candidate) + '. В игре выбери ближайшее доступное значение.');
+  };
+}
+apply.onclick = () => {
+  if (candidate === null) return;
+  current.value = Number(candidate.toPrecision(7));
+  candidate = null;
+  show('Введи значение в игре и повтори тест.');
+};
+document.getElementById('save').onclick = () => {
+  const chosen = value();
+  if (chosen === null) { show('Введи проверенное значение.'); current.focus(); return; }
+  saved[mode.value] = chosen;
+  try { localStorage.setItem(storage,JSON.stringify(saved)); } catch {}
+  reset();
+  renderSaved();
+  show('Сохранено: ' + format(chosen) + '.');
+};
+current.value = saved[mode.value] ?? '';
+renderSaved();
+
+</script>
+</body>
+</html>
