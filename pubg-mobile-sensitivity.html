@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PUBG Mobile · подбор чувствительности</title>
+<meta name="description" content="Подстрой чувствительность PUBG Mobile после смены телефона. Тесты камеры, ADS и гироскопа на полигоне.">
+<style>
+:root{color-scheme:dark;--bg:#151713;--panel:#20231d;--line:#414638;--ink:#f8f4e9;--muted:#c0c5b5;--accent:#f0c77d;font:16px/1.5 system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg)}main{max-width:960px;margin:auto;padding:48px 24px 56px}header{padding-bottom:24px;border-bottom:1px solid var(--line)}h1,h2,p{margin:0}h1{font-size:clamp(2rem,7vw,4rem);line-height:1.05;letter-spacing:-.055em}h2{font-size:1.2rem}p{margin-top:10px;color:var(--muted)}.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.62fr);gap:16px;margin-top:22px}.box{padding:clamp(15px,3vw,24px);background:var(--panel);border:1px solid var(--line);border-radius:14px;min-width:0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}label{display:grid;gap:4px;color:var(--muted)}select,input,button{font:inherit;color:var(--ink)}select,input{background:#171914;border:1px solid #555d4b;border-radius:9px;padding:8px;width:100%;min-width:0}.commands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}button{border:1px solid #68634d;background:#2e3127;padding:9px;border-radius:9px;cursor:pointer}button:hover{background:#3b3e31}button.primary{background:var(--accent);color:#221a0e;font-weight:680;border:0}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.output{padding:12px;margin-top:14px;background:#161914;border-radius:9px;color:var(--ink);min-height:60px}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.controls button{font-size:.9rem}.prose{margin:12px 0 0;padding-left:21px;color:var(--muted)}.prose li{margin:8px 0}.saved{padding:0;list-style:none}.saved li{padding:8px 0;border-top:1px solid var(--line)}a{color:var(--accent)}small{color:var(--muted)}[hidden]{display:none!important}@media(max-width:660px){main{padding:25px 16px 38px}.layout{grid-template-columns:1fr}.fields{gap:9px}.commands button{font-size:.88rem}.box{padding:14px}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Чувствительность PUBG Mobile</h1><p>После смены телефона перенеси текущие значения и подстрой их по своим движениям на полигоне.</p></header>
+<div class="layout">
+<section class="box" aria-labelledby="setup-title">
+<h2 id="setup-title">Подбор по одному прицелу</h2>
+<div class="fields">
+<label>Что настраиваешь<select id="mode"><option value="camera">Камера</option><option value="ads">ADS при стрельбе</option><option value="gyro">Гироскоп</option><option value="adsGyro">Гироскоп при стрельбе</option></select></label>
+<label>Прицел<select id="scope"><option>Без прицела · TPP</option><option>Без прицела · FPP</option><option>Коллиматор / голограф</option><option>2×</option><option>3×</option><option>4×</option><option>6×</option><option>8×</option></select></label>
+<label>Текущее значение, %<input id="value" type="number" min="1" max="1000" step="1" inputmode="numeric" placeholder="Из настроек игры"></label>
+<label>Шаг замера<select id="step"><option value="10">10% от текущего</option><option value="5">5% от текущего</option><option value="2">2% от текущего</option></select></label>
+</div>
+<p id="drill"></p>
+<div class="commands"><button type="button" id="under">Не довожу</button><button type="button" id="over">Перелетаю</button><button type="button" class="primary" id="save">Комфортно</button></div>
+<div class="output" id="result" role="status">Введи процент из игры и выбери результат пробы.</div>
+<div class="controls"><button type="button" id="apply" disabled>Использовать значение</button><button type="button" id="restore" hidden>Вернуть стартовое</button></div>
+</section>
+<aside class="box">
+<h2>Как проверить</h2>
+<ol class="prose"><li>На полигоне выбери своё оружие, прицел и привычные обвесы.</li><li>Сделай три одинаковые попытки. Если ошибка повторилась хотя бы дважды, меняй один параметр.</li><li>Введи предложенное значение в игре и повтори тест. Если отклонение сменило сторону, калькулятор уменьшит шаг.</li></ol>
+<p><small>Игра и аккаунт не подключаются. Сохраняются только выбранные значения в этом браузере.</small></p>
+</aside>
+<section class="box"><h2>Мои настройки</h2><p id="nothing">Здесь появятся комфортные значения для каждого прицела.</p><ul id="saved" class="saved"></ul><div class="controls"><button type="button" id="copy" disabled>Скопировать значения</button><button type="button" id="clear" disabled>Очистить</button></div></section>
+</div>
+<p><small>Путь в игре: «Настройки» → «Чувствительность». Если у оружия включён собственный профиль, сверяй значения именно в нём. <a href="https://pubgmobile.helpshift.com/hc/en/3-pubg-mobile/faq/487-i-want-to-change-the-sensitivity-according-to-each-weapons/">Справка PUBG Mobile</a></small></p>
+</main>
+<script>
+const el = id => document.getElementById(id);
+const drills = {
+  camera:'Без стрельбы одним привычным свайпом переводи прицел между двумя целями.',
+  ads:'С выключенным для теста гироскопом сделай короткие очереди в стену и сравни движение прицела с движением пальца.',
+  gyro:'Без стрельбы переводи прицел наклоном телефона, сохраняя привычный хват.',
+  adsGyro:'Стреляй короткими очередями, компенсируя наклоном. Не меняй параллельно чувствительность ADS пальцем.'
+};
+const inputs = ['mode','scope','value','step'];
+const storage = 'pubg-mobile-sensitivity-v1';
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(storage)) || {}; } catch {}
+let candidate = null, previousDirection = null, effectiveStep = null, baseline = null;
+function value() {
+  const x = el('value').valueAsNumber;
+  return el('value').validity.valid && Number.isInteger(x) && x > 0 ? x : null;
+}
+function selection() { return el('mode').selectedOptions[0].text + ' · ' + el('scope').value; }
+function display(message) {
+  el('result').textContent = message;
+  el('apply').disabled = candidate === null;
+  el('restore').hidden = baseline === null;
+}
+function resetTrial(message) {
+  candidate = previousDirection = effectiveStep = baseline = null;
+  display(message);
+}
+function renderSaved() {
+  const entries = Object.entries(saved);
+  el('saved').replaceChildren(...entries.map(([name, number]) => {
+    const row = document.createElement('li');
+    row.textContent = name + ' — ' + number + '%';
+    return row;
+  }));
+  el('nothing').hidden = entries.length > 0;
+  el('copy').disabled = el('clear').disabled = !entries.length;
+}
+function persist() {
+  try { localStorage.setItem(storage, JSON.stringify(saved)); } catch {}
+  renderSaved();
+}
+function test(direction) {
+  const current = value();
+  if (!current) { display('Введи целый процент из настроек игры.'); el('value').focus(); return; }
+  baseline ??= current;
+  effectiveStep ??= Number(el('step').value);
+  if (previousDirection !== null && previousDirection !== direction) effectiveStep = Math.max(2, effectiveStep / 2);
+  previousDirection = direction;
+  const delta = Math.max(1, Math.round(current * effectiveStep / 100));
+  candidate = Math.max(1, Math.min(1000, current + direction * delta));
+  if (candidate === current) {
+    candidate = null;
+    display('Достигнут предел ввода. Проверь доступный диапазон в игре и сравни с соседним значением.');
+    return;
+  }
+  display('Следующая проба: ' + candidate + '%. Если значение выходит за пределы ползунка в игре, остановись на ближайшем допустимом значении.');
+}
+for (const id of inputs) {
+  el(id).addEventListener(id === 'value' ? 'input' : 'change', () => {
+    if (id === 'mode' || id === 'scope') el('value').value = saved[selection()] ?? '';
+    el('drill').textContent = drills[el('mode').value];
+    resetTrial('Проверь текущее значение на полигоне и выбери результат пробы.');
+  });
+}
+el('under').onclick = () => test(1);
+el('over').onclick = () => test(-1);
+el('apply').onclick = () => {
+  if (candidate === null) return;
+  el('value').value = candidate;
+  candidate = null;
+  display('Поставь это значение в игре и повтори тест.');
+};
+el('restore').onclick = () => {
+  if (baseline === null) return;
+  el('value').value = baseline;
+  resetTrial('Стартовое значение восстановлено в калькуляторе.');
+};
+el('save').onclick = () => {
+  const current = value();
+  if (!current) { el('value').focus(); display('Введи процент, который проверил в игре.'); return; }
+  saved[selection()] = current;
+  persist();
+  resetTrial('Сохранено: ' + selection() + ', ' + current + '%.');
+};
+el('copy').onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(Object.entries(saved).map(([k,v]) => k + ': ' + v + '%').join('\n'));
+    display('Настройки скопированы.');
+  } catch { display('Копирование недоступно. Значения можно выделить в списке.'); }
+};
+el('clear').onclick = () => { saved = {}; persist(); display('Список очищен.'); };
+el('drill').textContent = drills.camera;
+el('value').value = saved[selection()] ?? '';
+renderSaved();
+</script>
+</body>
+</html>
